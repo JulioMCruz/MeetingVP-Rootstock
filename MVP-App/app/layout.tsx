@@ -3,6 +3,9 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Navbar } from '@/components/layout/navbar';
 
+//import { ThemeProvider } from "@/components/theme-provider"
+import OnchainProvider from '@/providers/onchainProvider'
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -18,8 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className} suppressHydrationWarning>
-        <Navbar />
-        {children}
+        <OnchainProvider>
+          <Navbar />
+          {children}
+        </OnchainProvider>
       </body>
     </html>
   );
