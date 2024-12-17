@@ -1,4 +1,4 @@
-# MeetingVP-Rootstock
+# Meeting Value Protocol - Rootstock
 
 A revolutionary decentralized application (dApp) leveraging blockchain technology to transform meeting management for Developer Relations professionals and mentors.
 
