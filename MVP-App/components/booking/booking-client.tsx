@@ -53,6 +53,7 @@ export function BookingClient({ mentor }: BookingClientProps) {
               <BookingDetails
                 date={selectedDate}
                 time={selectedSlot}
+                price={mentor.price}
                 onConfirm={handleShowPayment}
               />
             )}
