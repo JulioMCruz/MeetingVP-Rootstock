@@ -17,3 +17,15 @@ export interface Feature {
   description: string;
   gradient: string;
 }
+
+export interface User {
+  userId: string;
+  fullName: string;
+  email: string;
+  twitter?: string;
+  linkedin?: string;
+  github?: string;
+  farcaster?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
