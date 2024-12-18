@@ -35,18 +35,18 @@ export function MentorCard({ mentor, onBook }: MentorCardProps) {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        {mentor.expertise.map((skill) => (
+        {/* {mentor.expertise.map((skill) => (
           <Badge key={skill} variant="secondary" className="text-xs">
             {skill}
           </Badge>
-        ))}
+        ))} */}
       </div>
       
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-1">
+        {/* <div className="flex items-center gap-1">
           <Star className="h-4 w-4 fill-primary text-primary" />
           <span>{mentor.rating}</span>
-        </div>
+        </div> */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4" />

@@ -1,9 +1,13 @@
 export interface Mentor {
   id: string;
-  name: string;
+  fullName: string;
   role: string;
   company: string;
-  image: string;
+  profileImage?: string;
+  twitter?: string;
+  linkedin?: string;
+  github?: string;
+  farcaster?: string;
   rating: number;
   price: number;
   expertise: string[];
@@ -21,7 +25,9 @@ export interface Feature {
 export interface User {
   userId: string;
   fullName: string;
+  profileImage?: string;
   email: string;
+  address: string;
   twitter?: string;
   linkedin?: string;
   github?: string;

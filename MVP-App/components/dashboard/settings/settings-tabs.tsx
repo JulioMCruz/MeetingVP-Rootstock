@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -8,15 +8,22 @@ import { Switch } from '@/components/ui/switch';
 import { useDynamicContext, useIsLoggedIn } from '@dynamic-labs/sdk-react-core';
 import { useAccount } from 'wagmi';
 import { toast } from 'sonner';
+import { Image as ImageIcon, X } from 'lucide-react';
 
 interface UserProfile {
   fullName: string;
+  address: string;
   email: string;
   twitter: string;
   linkedin: string;
   github: string;
   farcaster: string;
+  profileImage: string;
 }
+
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB in bytes
+const MIN_DIMENSIONS = 200; // Minimum width/height in pixels
+const MAX_DIMENSIONS = 2048; // Maximum width/height in pixels
 
 export function SettingsTabs() {
   const { user } = useDynamicContext();
@@ -25,12 +32,17 @@ export function SettingsTabs() {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<UserProfile>({
     fullName: '',
+    address: '',
     email: '',
     twitter: '',
     linkedin: '',
     github: '',
     farcaster: '',
+    profileImage: '',
   });
+  const [imageError, setImageError] = useState<string>('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -42,11 +54,13 @@ export function SettingsTabs() {
           const userData = await response.json();
           setProfile({
             fullName: userData.fullName || '',
+            address: userData.address || '',
             email: userData.email || '',
             twitter: userData.twitter || '',
             linkedin: userData.linkedin || '',
             github: userData.github || '',
             farcaster: userData.farcaster || '',
+            profileImage: userData.profileImage || '',
           });
         }
       } catch (error) {
@@ -98,6 +112,86 @@ export function SettingsTabs() {
     }
   };
 
+  const validateImageDimensions = (file: File): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const img = new window.Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(img.src);
+        if (img.width < MIN_DIMENSIONS || img.height < MIN_DIMENSIONS) {
+          setImageError(`Image must be at least ${MIN_DIMENSIONS}x${MIN_DIMENSIONS} pixels`);
+          resolve(false);
+        } else if (img.width > MAX_DIMENSIONS || img.height > MAX_DIMENSIONS) {
+          setImageError(`Image must be no larger than ${MAX_DIMENSIONS}x${MAX_DIMENSIONS} pixels`);
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      };
+      img.onerror = () => {
+        setImageError('Error loading image');
+        resolve(false);
+      };
+    });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setImageError('');
+    setIsUploading(true);
+    
+    try {
+      if (!file) return;
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setImageError('Please upload an image file');
+        return;
+      }
+
+      // Validate file size
+      if (file.size > MAX_FILE_SIZE) {
+        setImageError('Image must be less than 1MB');
+        return;
+      }
+
+      // Validate dimensions
+      const validDimensions = await validateImageDimensions(file);
+      if (!validDimensions) return;
+
+      // Convert to base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setProfile(prev => ({
+          ...prev,
+          profileImage: base64String
+        }));
+        setIsUploading(false);
+      };
+      reader.onerror = () => {
+        setImageError('Error reading file');
+        setIsUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error processing image:', error);
+      setImageError('Error processing image');
+      setIsUploading(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setProfile(prev => ({
+      ...prev,
+      profileImage: ''
+    }));
+    setImageError('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <Tabs defaultValue="profile">
       <TabsList className="mb-6">
@@ -106,6 +200,56 @@ export function SettingsTabs() {
       
       <TabsContent value="profile">
         <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Profile Image</Label>
+            <div className="flex items-center gap-4">
+              {profile.profileImage ? (
+                <div className="relative">
+                  <img 
+                    src={profile.profileImage} 
+                    alt="Profile" 
+                    className="w-24 h-24 rounded-full object-cover"
+                  />
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    className="absolute -top-2 -right-2 h-6 w-6"
+                    onClick={handleRemoveImage}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center">
+                  <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                </div>
+              )}
+              <div className="space-y-2">
+                <Button
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                >
+                  {isUploading ? 'Uploading...' : 'Upload Image'}
+                </Button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                />
+                <p className="text-sm text-muted-foreground">
+                  Recommended: Square image, 200x200 to 2048x2048 pixels, max 1MB
+                </p>
+                {imageError && (
+                  <p className="text-sm text-destructive">
+                    {imageError}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="name">Full Name *</Label>
             <Input 

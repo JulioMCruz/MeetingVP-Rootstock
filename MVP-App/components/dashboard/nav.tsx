@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Calendar, Users, FileText, Settings, LogOut } from 'lucide-react';
+import { Calendar, Users, FileText, Settings, LogOut, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -27,6 +27,11 @@ const navItems = [
     href: '/dashboard/settings',
     icon: Settings,
   },
+  {
+    title: 'Availability',
+    href: '/dashboard/settings/availability',
+    icon: Clock,
+  }  
 ];
 
 export function DashboardNav() {

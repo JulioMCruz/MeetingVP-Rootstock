@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Clock, Wallet, Globe, Calendar, Users } from 'lucide-react';
 import { Mentor } from '@/lib/types';
+import Image from 'next/image';
 
 interface MentorProfileProps {
   mentor: Mentor;
@@ -13,22 +14,25 @@ export function MentorProfile({ mentor }: MentorProfileProps) {
   return (
     <Card className="p-6 space-y-6">
       <div className="text-center">
-        <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden">
-          <img
-            src={mentor.image}
-            alt={mentor.name}
-            className="w-full h-full object-cover"
+        <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden relative">
+          <img 
+            src={mentor.profileImage || '/assets/avatar.png'} 
+            alt={mentor.fullName || 'Profile'} 
+            className="w-24 h-24 rounded-full object-cover"
+            onError={(e) => {
+              e.currentTarget.src = '/assets/avatar.png';
+            }}
           />
         </div>
-        <h1 className="text-2xl font-bold">{mentor.name}</h1>
-        <p className="text-muted-foreground">{mentor.role} @ {mentor.company}</p>
+        <h1 className="text-2xl font-bold">{mentor.fullName}</h1>
+        {/* <p className="text-muted-foreground">{mentor.role} @ {mentor.company}</p> */}
       </div>
 
       <div className="flex items-center justify-center gap-1">
-        {[...Array(5)].map((_, i) => (
+        {/* {[...Array(5)].map((_, i) => (
           <Star key={i} className="h-4 w-4 fill-primary text-primary" />
         ))}
-        <span className="ml-2 text-sm text-muted-foreground">({mentor.meetings} reviews)</span>
+        <span className="ml-2 text-sm text-muted-foreground">({mentor.meetings} reviews)</span> */}
       </div>
 
       <div className="space-y-4 pt-4 border-t border-border">
@@ -60,9 +64,9 @@ export function MentorProfile({ mentor }: MentorProfileProps) {
       <div className="pt-4 border-t border-border">
         <h3 className="font-semibold mb-2">Expertise</h3>
         <div className="flex flex-wrap gap-2">
-          {mentor.expertise.map((skill) => (
+          {/* {mentor.expertise.map((skill) => (
             <Badge key={skill} variant="outline">{skill}</Badge>
-          ))}
+          ))} */}
         </div>
       </div>
 

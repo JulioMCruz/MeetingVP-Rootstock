@@ -3,11 +3,17 @@ import { MongoClient, ObjectId } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
 
+console.log('*** uri:', uri);
 // GET user by userId
 export async function GET(request: Request) {
   try {
+
+    console.log('*** Get request:', request);
+
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
+
+    console.log('*** userId:', userId);
 
     if (!userId) {
       return NextResponse.json({ error: 'userId is required' }, { status: 400 });
@@ -19,7 +25,7 @@ export async function GET(request: Request) {
     const db = client.db('mvp-rootstock');
     const user = await db.collection('users').findOne({ userId });
 
-    console.log('user:', user);
+    console.log('Fetched user data:', JSON.stringify(user));
 
     await client.close();
 
@@ -39,6 +45,9 @@ export async function GET(request: Request) {
 // POST new user
 export async function POST(request: Request) {
   try {
+
+    console.log('*** Post request:', request);
+
     const body = await request.json();
     const { userId, ...userData } = body;
 
@@ -78,7 +87,10 @@ export async function POST(request: Request) {
 
 // PUT update user
 export async function PUT(request: Request) {
-  try {
+  try { 
+
+    console.log('*** Put request:', request);
+
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
     const updates = await request.json();

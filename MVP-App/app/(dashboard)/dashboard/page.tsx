@@ -7,11 +7,13 @@ import { DashboardStats } from '@/components/dashboard/stats';
 import { UpcomingMeetings } from '@/components/dashboard/upcoming-meetings';
 import { RecentActivity } from '@/components/dashboard/recent-activity';
 import { useDynamicContext, useIsLoggedIn } from '@dynamic-labs/sdk-react-core';
+import { useAccount } from 'wagmi';
 
 export default function DashboardPage() {
   const router = useRouter();
   const { user } = useDynamicContext();
   const isLoggedIn = useIsLoggedIn();
+  const { address } = useAccount();
 
   useEffect(() => {
     const verifyUser = async () => {
@@ -27,6 +29,7 @@ export default function DashboardPage() {
           // User doesn't exist, create new user
           const newUser = {
             userId: user.userId,
+            address: address || '',
             fullName: user.alias || '',
             email: user.email || '',
           };
