@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Calendar, Clock, Plus, X } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Plus, X } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { useDynamicContext } from '@/lib/dynamic';
+import { toast } from 'sonner';
 
 const days = [
   'Monday',
@@ -30,6 +31,37 @@ export function AvailabilitySettings() {
   const [isAvailable, setIsAvailable] = useState(true);
   const [selectedDays, setSelectedDays] = useState<string[]>(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']);
   const [timeRanges, setTimeRanges] = useState([{ start: '9:00 AM', end: '5:00 PM' }]);
+  const [bufferTime, setBufferTime] = useState(15);
+  const [loading, setLoading] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
+
+  const { user } = useDynamicContext();
+
+  useEffect(() => {
+    const loadAvailability = async () => {
+      if (!user?.userId) return;
+
+      try {
+        const response = await fetch(`/api/users/availability?userId=${user.userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data) {
+            setIsAvailable(data.isAvailable);
+            setSelectedDays(data.workingDays);
+            setTimeRanges(data.timeRanges);
+            setBufferTime(data.bufferTime);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading availability:', error);
+        toast.error('Failed to load availability settings');
+      } finally {
+        setInitialLoad(false);
+      }
+    };
+
+    loadAvailability();
+  }, [user?.userId]);
 
   const toggleDay = (day: string) => {
     if (selectedDays.includes(day)) {
@@ -52,6 +84,41 @@ export function AvailabilitySettings() {
     newRanges[index] = { ...newRanges[index], [field]: value };
     setTimeRanges(newRanges);
   };
+
+  const handleSave = async () => {
+    if (!user?.userId) return;
+
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/users/availability?userId=${user.userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isAvailable,
+          selectedDays,
+          timeRanges,
+          bufferTime,
+        }),
+      });
+
+      if (response.ok) {
+        toast.success('Availability settings saved successfully');
+      } else {
+        throw new Error('Failed to save settings');
+      }
+    } catch (error) {
+      console.error('Error saving availability:', error);
+      toast.error('Failed to save availability settings');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (initialLoad) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="space-y-8">
@@ -164,7 +231,9 @@ export function AvailabilitySettings() {
       </div>
 
       <div className="pt-6 border-t border-border">
-        <Button>Save Changes</Button>
+        <Button onClick={handleSave} disabled={loading}>
+          {loading ? 'Saving...' : 'Save Changes'}
+        </Button>
       </div>
     </div>
   );
