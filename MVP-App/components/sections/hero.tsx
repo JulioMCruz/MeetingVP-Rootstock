@@ -11,7 +11,6 @@ export function Hero() {
   const isLoggedIn = useIsLoggedIn();
   const { setShowAuthFlow } = useDynamicContext()
 
-
   function login() {
     if (!isLoggedIn) {
         setShowAuthFlow(true)
