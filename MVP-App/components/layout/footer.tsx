@@ -22,7 +22,7 @@ const footerLinks = {
     { label: 'About Us', href: '/about' },
     // { label: 'Careers', href: '/careers' },
     { label: 'Contact', href: '/contact' },
-    // { label: 'Partners', href: '/partners' },
+    { label: 'Telegram', href: 'https://t.me/+fGLLrDp7cPs5ZjYx' },
   ],
   legal: [
     { label: 'Privacy', href: '/privacy' },
