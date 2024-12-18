@@ -42,7 +42,7 @@ export function PaymentModal({ open, onClose, amount }: PaymentModalProps) {
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          <PaymentSummary amount={amount} networkFee="~0.001 ETH" />
+          <PaymentSummary amount={amount} networkFee="~0.0001 rBTC" />
           <PaymentActions 
             isWalletConnected={isWalletConnected}
             onConnect={handleConnectWallet}
