@@ -70,6 +70,11 @@ export function SettingsTabs() {
   const handleSaveChanges = async () => {
     if (!user?.userId) return;
 
+    if (!profile.fullName.trim()) {
+      toast.error('Full name is required');
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch(`/api/users?userId=${user.userId}`, {
@@ -102,12 +107,18 @@ export function SettingsTabs() {
       <TabsContent value="profile">
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
+            <Label htmlFor="name">Full Name *</Label>
             <Input 
               id="name" 
               value={profile.fullName}
               onChange={handleInputChange('fullName')}
+              required
             />
+            {!profile.fullName.trim() && (
+              <p className="text-sm text-muted-foreground text-red-500">
+                This field is required
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
