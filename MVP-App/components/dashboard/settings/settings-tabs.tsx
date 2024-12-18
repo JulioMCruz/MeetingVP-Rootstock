@@ -4,8 +4,20 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { useDynamicContext, useIsLoggedIn } from '@dynamic-labs/sdk-react-core'
+import { useAccount } from 'wagmi';
+
 
 export function SettingsTabs() {
+
+  const { user } = useDynamicContext();
+  const isLoggedIn = useIsLoggedIn();
+  const { address } = useAccount();
+
+  console.log('user', user);
+  console.log('address', address);
+  console.log('isLoggedIn', isLoggedIn);
+
   return (
     <Tabs defaultValue="profile">
       <TabsList className="mb-6">
@@ -24,6 +36,23 @@ export function SettingsTabs() {
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" defaultValue="john@example.com" />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="twitter">X (Twitter)</Label>
+            <Input id="twitter" placeholder="https://x.com/username" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="linkedin">LinkedIn</Label>
+            <Input id="linkedin" placeholder="https://linkedin.com/in/username" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="github">GitHub</Label>
+            <Input id="github" placeholder="https://github.com/username" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="farcaster">Farcaster</Label>
+            <Input id="farcaster" placeholder="@username" />
+          </div>
+          
           <Button>Save Changes</Button>
         </div>
       </TabsContent>
@@ -52,10 +81,10 @@ export function SettingsTabs() {
           <div className="space-y-2">
             <Label>Connected Wallet</Label>
             <Card className="p-4">
-              <code className="text-sm">0x1234...5678</code>
+                <code className="text-sm">{address}</code>
             </Card>
           </div>
-          <Button variant="outline">Disconnect Wallet</Button>
+          {/* <Button variant="outline">Disconnect Wallet</Button> */}
         </div>
       </TabsContent>
     </Tabs>
