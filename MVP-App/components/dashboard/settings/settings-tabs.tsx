@@ -8,7 +8,8 @@ import { Switch } from '@/components/ui/switch';
 import { useDynamicContext, useIsLoggedIn } from '@dynamic-labs/sdk-react-core';
 import { useAccount } from 'wagmi';
 import { toast } from 'sonner';
-import { Image as ImageIcon, X } from 'lucide-react';
+import { Image as ImageIcon, X, ExternalLink, QrCode } from 'lucide-react';
+import { QRCodeModal } from './qr-code-modal';
 
 interface UserProfile {
   fullName: string;
@@ -43,6 +44,7 @@ export function SettingsTabs() {
   const [imageError, setImageError] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -200,7 +202,34 @@ export function SettingsTabs() {
       
       <TabsContent value="profile">
         <div className="space-y-4">
+
+        {user?.userId && (
+          <div className="flex gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => window.open(`/book/${user.userId}`, '_blank')}
+            >
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Preview Booking Page
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => setShowQRModal(true)}
+            >
+              <QrCode className="mr-2 h-4 w-4" />
+              Generate QR Code
+            </Button>
+            <QRCodeModal 
+              open={showQRModal}
+              onClose={() => setShowQRModal(false)}
+              url={`${window.location.origin}/book/${user.userId}`}
+            />
+          </div>
+        )}
+
           <div className="space-y-2">
+
+
             <Label>Profile Image</Label>
             <div className="flex items-center gap-4">
               {profile.profileImage ? (
@@ -225,13 +254,15 @@ export function SettingsTabs() {
                 </div>
               )}
               <div className="space-y-2">
-                <Button
-                  variant="outline"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploading}
-                >
-                  {isUploading ? 'Uploading...' : 'Upload Image'}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                  >
+                    {isUploading ? 'Uploading...' : 'Upload Image'}
+                  </Button>
+                </div>
                 <input
                   ref={fileInputRef}
                   type="file"

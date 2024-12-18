@@ -6,7 +6,7 @@ async function getMentorByUserId(userId: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     let url = `${baseUrl}/api/users?userId=${userId}`;  
-    console.log('*** url:', url);
+    // console.log('*** url:', url);
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -19,7 +19,7 @@ async function getMentorByUserId(userId: string) {
     }
     const userData = await response.json();
 
-    console.log('*** userData:', userData);
+    // console.log('*** userData:', userData);
     
     // Find mentor data that matches this user
     //const mentor = allMentors.find(m => m.id === userData.userId);
