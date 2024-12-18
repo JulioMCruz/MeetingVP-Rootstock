@@ -5,7 +5,14 @@ import { notFound } from 'next/navigation';
 async function getMentorByUserId(userId: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/users?userId=${userId}`);
+    let url = `${baseUrl}/api/users?userId=${userId}`;  
+    console.log('*** url:', url);
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (!response.ok) {
       return null;
