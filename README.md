@@ -79,11 +79,11 @@ MeetingVP-Rootstock addresses crucial needs in professional development by:
 
 [Contact information and support details to be added]
 
-## 🔗 Links
+<!-- ## 🔗 Links
 
 [Relevant links to be added]
 
 ## 📄 License
 
-[License information to be added]
+[License information to be added] -->
 
