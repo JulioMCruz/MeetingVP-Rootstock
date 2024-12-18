@@ -5,25 +5,25 @@ import { Card } from '@/components/ui/card';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 const contactInfo = [
-  {
-    icon: MapPin,
-    title: 'Location',
-    content: '123 Blockchain Avenue, Tech District, CA 94105',
-  },
-  {
-    icon: Phone,
-    title: 'Phone',
-    content: '+1 (555) 123-4567',
-  },
+  // {
+  //   icon: MapPin,
+  //   title: 'Location',
+  //   content: '123 Blockchain Avenue, Tech District, CA 94105',
+  // },
+  // {
+  //   icon: Phone,
+  //   title: 'Phone',
+  //   content: '+1 (555) 123-4567',
+  // },
   {
     icon: Mail,
     title: 'Email',
-    content: 'contact@mvprotocol.com',
+    content: 'contact@mvprotocol.xyz',
   },
   {
     icon: Clock,
     title: 'Business Hours',
-    content: 'Monday - Friday: 9:00 AM - 6:00 PM PST',
+    content: 'Monday - Friday: 9:00 AM - 6:00 PM EST',
   },
 ];
 

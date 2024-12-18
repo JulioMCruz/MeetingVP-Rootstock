@@ -4,9 +4,20 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useDynamicContext, useIsLoggedIn } from '@dynamic-labs/sdk-react-core'
 
 export function Hero() {
   const router = useRouter();
+  const isLoggedIn = useIsLoggedIn();
+  const { setShowAuthFlow } = useDynamicContext()
+
+  function login() {
+    if (!isLoggedIn) {
+        setShowAuthFlow(true)
+    } else {
+      //toast.warning('user is already logged in')
+    }
+  }
 
   return (
     <section className="relative min-h-screen flex items-center justify-center py-20">
@@ -34,16 +45,28 @@ export function Hero() {
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          { isLoggedIn && (
           <Button 
             size="lg" 
             className="w-full sm:w-auto bg-primary hover:bg-primary/90"
-            onClick={() => router.push('/login')}
+            onClick={() => router.push('/dashboard')}
           >
             Get Started <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          <Button size="lg" variant="outline" className="w-full sm:w-auto border-primary/20 hover:bg-primary/10">
-            Learn More
+
+          )}
+          { !isLoggedIn && (
+          <Button 
+            size="lg" 
+            className="w-full sm:w-auto bg-primary hover:bg-primary/90"
+            onClick={login}
+          >
+            Get Started <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
+          )}
+          {/* <Button size="lg" variant="outline" className="w-full sm:w-auto border-primary/20 hover:bg-primary/10">
+            Learn More
+          </Button> */}
         </div>
       </motion.div>
     </section>
