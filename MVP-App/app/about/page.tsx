@@ -12,7 +12,7 @@ export default function AboutPage() {
       <AboutHero />
       <AboutMission />
       <AboutValues />
-      <AboutTeam />
+      {/* <AboutTeam /> */}
       <AboutCTA />
     </main>
   );
