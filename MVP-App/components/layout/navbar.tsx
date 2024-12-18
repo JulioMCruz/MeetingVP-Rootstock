@@ -12,6 +12,7 @@ import {
 } from "../../lib/dynamic";
 import { useDynamicContext, useIsLoggedIn } from '@dynamic-labs/sdk-react-core'
 
+import { StatusBar } from "@/components/status-bar";
 
 export function Navbar() {
 
@@ -44,7 +45,7 @@ export function Navbar() {
           <Link href="/" className="text-xl font-bold text-primary">MVP</Link>
           
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/features" className="text-foreground/80 hover:text-primary transition-colors">
+            {/* <Link href="/features" className="text-foreground/80 hover:text-primary transition-colors">
               Features
             </Link>
             <Link href="/about" className="text-foreground/80 hover:text-primary transition-colors">
@@ -52,7 +53,8 @@ export function Navbar() {
             </Link>
             <Link href="/contact" className="text-foreground/80 hover:text-primary transition-colors">
               Contact
-            </Link>
+            </Link> */}
+            <StatusBar />
           </div>
 
           <div className="flex items-center space-x-4">
